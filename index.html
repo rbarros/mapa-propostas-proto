@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mapa de Propostas — Eleições 2026</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--text:#171923;--muted:#6b7280;--line:#e7e9ef;--accent:#111827;--accent2:#eef0f4}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text)}
+.wrap{min-height:100vh;display:flex;justify-content:center;padding:28px 16px}.app{width:100%;max-width:720px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}.brand{font-weight:800;font-size:15px;letter-spacing:-.2px}.count{font-size:13px;color:var(--muted)}
+.progress{height:5px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin-bottom:28px}.bar{height:100%;background:var(--accent);width:0;transition:.35s}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:28px;box-shadow:0 10px 30px #11182708}
+.kicker{text-transform:uppercase;letter-spacing:1.2px;font-size:11px;font-weight:800;color:var(--muted);margin-bottom:12px}
+h1{font-size:clamp(28px,6vw,44px);line-height:1.05;letter-spacing:-1.5px;margin:0 0 14px}
+h2{font-size:26px;line-height:1.15;margin:0 0 10px;letter-spacing:-.6px}.desc{color:var(--muted);line-height:1.6;margin:0 0 24px}
+.btn{width:100%;border:0;border-radius:14px;padding:16px 18px;background:var(--accent);color:white;font-weight:750;font-size:15px;cursor:pointer}.btn:hover{opacity:.92}
+.option{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px;margin:10px 0;cursor:pointer;transition:.18s}
+.option:hover{border-color:#9ca3af;transform:translateY(-1px)}.option.selected{border-color:#111827;background:#f1f3f6}
+.dot{width:22px;height:22px;border:2px solid #c7cbd3;border-radius:50%;flex:none;margin-top:1px}.selected .dot{border:6px solid #111827}
+.label{font-weight:650;line-height:1.4}.small{font-size:12px;color:var(--muted);margin-top:4px}
+.nav{display:flex;gap:10px;margin-top:22px}.back{background:#eef0f4;color:#111827}.nav .btn{flex:1}
+.result{text-align:center}.match{font-size:54px;font-weight:850;letter-spacing:-3px;margin:5px 0}.candidate{font-size:27px;font-weight:800}.party{color:var(--muted);margin-top:3px}
+.bars{text-align:left;margin:28px 0}.row{margin:15px 0}.rowhead{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:7px}.track{height:9px;background:#eceef2;border-radius:99px;overflow:hidden}.fill{height:100%;background:#111827;border-radius:99px}
+.note{background:#f3f4f6;border-radius:14px;padding:14px;text-align:left;color:#555e6d;font-size:12px;line-height:1.55}
+.sources{font-size:11px;color:#7a8190;margin-top:20px;line-height:1.5}
+.hidden{display:none}@media(max-width:520px){.card{padding:22px;border-radius:20px}.wrap{padding:18px 12px}.top{margin-bottom:20px}}
+</style>
+</head>
+<body>
+<div class="wrap"><main class="app">
+  <div class="top"><div class="brand">MAPA DE PROPOSTAS</div><div class="count" id="count"></div></div>
+  <div class="progress"><div class="bar" id="bar"></div></div>
+
+  <section id="intro" class="card">
+    <div class="kicker">Eleições 2026</div>
+    <h1>Quais propostas mais se aproximam das suas?</h1>
+    <p class="desc">Responda às perguntas abaixo e veja como suas escolhas se relacionam com diferentes posições presentes nos programas de governo.</p>
+    <button class="btn" onclick="start()">Começar</button>
+    <div class="sources">Protótipo demonstrativo. A versão final deve usar exclusivamente posições verificadas nos planos oficiais do TSE.</div>
+  </section>
+
+  <section id="quiz" class="card hidden">
+    <div class="kicker" id="theme"></div>
+    <h2 id="question"></h2>
+    <div id="options"></div>
+    <div class="nav"><button class="btn back" onclick="prev()">Voltar</button><button class="btn" id="next" onclick="next()" disabled>Continuar</button></div>
+  </section>
+
+  <section id="result" class="card hidden result">
+    <div class="kicker">Resultado do protótipo</div>
+    <div class="match" id="match"></div>
+    <div class="candidate" id="winner"></div>
+    <div class="party" id="winnerParty"></div>
+    <div class="bars" id="ranking"></div>
+    <div class="note"><b>Como interpretar:</b> este percentual representa apenas a correspondência matemática entre as respostas e a base de posições configurada no protótipo. Não é recomendação de voto, previsão eleitoral ou avaliação de candidato.</div>
+    <button class="btn" style="margin-top:18px" onclick="restart()">Refazer questionário</button>
+    <div class="sources">Base visual e estrutura preparadas para receber os dados dos planos de governo oficiais publicados pelo TSE.</div>
+  </section>
+</main></div>
+
+<script>
+/*
+  PROTÓTIPO
+  Cada opção possui "tags". Na versão final, essas tags devem ser
+  construídas a partir de trechos verificáveis dos planos oficiais.
+*/
+const candidates = [
+ {name:"Luiz Inácio Lula da Silva", party:"PT", tags:["social","sindicato","sistema_publico","estado","investimento","transicao"]},
+ {name:"Flávio Bolsonaro", party:"PL", tags:["mercado","seguranca","empreendedor","privatizacao","impostos"]},
+ {name:"Renan Santos", party:"Missão", tags:["ajuste","empreendedor","trabalho","seguranca","digital"]},
+ {name:"Ronaldo Caiado", party:"PSD", tags:["ajuste","empreendedor","infra","produtividade","digital"]},
+ {name:"Romeu Zema", party:"NOVO", tags:["mercado","privatizacao","ajuste","empreendedor","desburocratizacao"]},
+ {name:"Augusto Cury", party:"AVANTE", tags:["empreendedor","educacao","saude_mental","ajuste","ia"]},
+ {name:"Clariana Barão", party:"DC", tags:["empreendedor","infra","digital","familia","seguranca"]},
+ {name:"Wilson Grassi", party:"DEMOCRATA", tags:["empreendedor","desoneracao","simplificacao","digital","pequenos"]},
+ {name:"Hertz Dias", party:"PSTU", tags:["trabalhador","sindicato","estatizacao","salario","publico"]},
+ {name:"Edmilson Costa", party:"PCB", tags:["trabalhador","estatizacao","publico","reforma_tributaria","divida"]},
+ {name:"Rui Costa Pimenta", party:"PCO", tags:["trabalhador","estatizacao","salario","divida","tributacao"]},
+ {name:"Samara Martins", party:"UP", tags:["trabalhador","estatizacao","emprego_publico","industria","divida"]},
+ {name:"Leonardo Avalanche", party:"PRTB", tags:["mercado","seguranca","empreendedor"]}
+];
+
+const questions = [
+ {theme:"Economia",q:"Qual deve ser a prioridade do governo na economia?",opts:[
+  ["Reduzir o tamanho do Estado e ampliar a liberdade econômica",["mercado","privatizacao","desburocratizacao"]],
+  ["Buscar equilíbrio entre responsabilidade fiscal e investimentos públicos",["ajuste","investimento","produtividade"]],
+  ["Ampliar a atuação do Estado para reduzir desigualdades",["social","estado","investimento"]],
+  ["Aumentar fortemente a participação estatal na economia",["estatizacao","estado","industria"]]]},
+ {theme:"Impostos",q:"Como você considera que o sistema tributário deveria mudar?",opts:[
+  ["Priorizar redução e simplificação de impostos",["impostos","simplificacao","desoneracao"]],
+  ["Manter equilíbrio fiscal e rever benefícios e gastos",["ajuste","impostos"]],
+  ["Aumentar a progressividade, cobrando proporcionalmente mais de quem tem mais",["reforma_tributaria","social","tributacao"]],
+  ["Concentrar a tributação sobre grandes rendas, lucros e patrimônio",["tributacao","estatizacao"]]]},
+ {theme:"Trabalho",q:"Qual posição mais se aproxima da sua sobre a jornada de trabalho?",opts:[
+  ["Manter as regras atuais, com mudanças negociadas",["mercado","trabalho"]],
+  ["Reduzir a jornada gradualmente",["trabalhador","social"]],
+  ["Acabar com a escala 6x1 e reduzir a jornada",["sindicato","trabalhador"]],
+  ["Adotar jornadas significativamente menores",["trabalhador","estatizacao","salario"]]]},
+ {theme:"Empresas",q:"Qual deveria ser o papel das empresas estatais?",opts:[
+  ["Privatizar empresas quando o setor privado puder operar melhor",["privatizacao","mercado"]],
+  ["Manter estatais estratégicas e usar parcerias quando fizer sentido",["estado","infra"]],
+  ["Fortalecer as principais empresas públicas",["estado","investimento"]],
+  ["Ampliar a estatização de setores estratégicos",["estatizacao","industria"]]]},
+ {theme:"Programas sociais",q:"Como o governo deveria lidar com programas de transferência de renda?",opts:[
+  ["Priorizar emprego, autonomia e redução gradual da dependência",["trabalho","empreendedor"]],
+  ["Manter programas sociais com foco e responsabilidade fiscal",["social","ajuste"]],
+  ["Ampliar a proteção social e os benefícios",["social","estado"]],
+  ["Criar políticas amplas de emprego e renda financiadas pelo Estado",["emprego_publico","trabalhador","estatizacao"]]]},
+ {theme:"Saúde",q:"Qual abordagem você considera mais adequada para a saúde pública?",opts:[
+  ["Ampliar parcerias e tecnologia para melhorar eficiência",["mercado","digital"]],
+  ["Fortalecer o SUS e melhorar gestão e atendimento",["sistema_publico","digital"]],
+  ["Aumentar fortemente o investimento público em saúde",["publico","investimento"]],
+  ["Tornar o sistema predominantemente estatal",["estatizacao","publico"]]]},
+ {theme:"Segurança",q:"Qual deveria ser a principal estratégia de segurança pública?",opts:[
+  ["Fortalecer polícia, repressão ao crime e segurança",["seguranca"]],
+  ["Usar inteligência, integração e tecnologia",["seguranca","digital"]],
+  ["Combinar segurança com prevenção e políticas sociais",["seguranca","social"]],
+  ["Reestruturar profundamente o modelo de segurança pública",["trabalhador","publico"]]]},
+ {theme:"Dívida pública",q:"Como o governo deveria lidar com a dívida pública?",opts:[
+  ["Fazer forte ajuste fiscal para reduzir despesas e dívida",["ajuste"]],
+  ["Equilibrar redução da dívida com investimentos",["ajuste","investimento"]],
+  ["Auditar e revisar a estrutura da dívida",["divida"]],
+  ["Suspender/rever pagamentos e redirecionar recursos para políticas públicas",["divida","estatizacao"]]]},
+ {theme:"Tecnologia",q:"Qual deve ser o papel da tecnologia no governo?",opts:[
+  ["Digitalizar serviços e reduzir burocracia",["digital","desburocratizacao"]],
+  ["Usar tecnologia principalmente para produtividade e negócios",["digital","produtividade","empreendedor"]],
+  ["Expandir serviços públicos digitais",["digital","publico"]],
+  ["Usar IA e tecnologia como política estratégica nacional",["ia","industria","digital"]]]},
+ {theme:"Desenvolvimento",q:"Qual modelo de desenvolvimento você considera mais adequado?",opts:[
+  ["Mais investimento privado e ambiente favorável aos negócios",["mercado","empreendedor"]],
+  ["Parceria entre Estado e iniciativa privada",["infra","empreendedor","estado"]],
+  ["Política industrial e investimento público",["industria","investimento","estado"]],
+  ["Controle estatal de setores estratégicos e reindustrialização",["estatizacao","industria"]]]}
+];
+
+let index=0, answers=[];
+function start(){document.getElementById("intro").classList.add("hidden");document.getElementById("quiz").classList.remove("hidden");render();}
+function render(){
+ const q=questions[index], count=document.getElementById("count");
+ count.textContent=`${index+1} de ${questions.length}`;
+ document.getElementById("bar").style.width=((index)/questions.length*100)+"%";
+ document.getElementById("theme").textContent=q.theme;
+ document.getElementById("question").textContent=q.q;
+ const box=document.getElementById("options");box.innerHTML="";
+ q.opts.forEach((o,i)=>{
+  const b=document.createElement("button");b.className="option"+(answers[index]===i?" selected":"");
+  b.innerHTML=`<span class="dot"></span><span class="label">${o[0]}</span>`;
+  b.onclick=()=>{answers[index]=i;render()};
+  box.appendChild(b);
+ });
+ document.getElementById("next").disabled=answers[index]===undefined;
+ document.getElementById("next").textContent=index===questions.length-1?"Ver resultado":"Continuar";
+}
+function next(){if(answers[index]===undefined)return;if(index<questions.length-1){index++;render()}else showResult()}
+function prev(){if(index>0){index--;render()}}
+function showResult(){
+ const scores=candidates.map(c=>({c,score:0}));
+ questions.forEach((q,qi)=>{
+  const a=answers[qi];if(a===undefined)return;
+  const tags=q.opts[a][1];
+  scores.forEach(x=>tags.forEach(t=>{if(x.c.tags.includes(t))x.score++}));
+ });
+ const max=questions.length*4;
+ scores.forEach(x=>x.percent=Math.round((x.score/max)*100));
+ scores.sort((a,b)=>b.percent-a.percent);
+ document.getElementById("quiz").classList.add("hidden");document.getElementById("result").classList.remove("hidden");
+ document.getElementById("bar").style.width="100%";document.getElementById("count").textContent="Concluído";
+ document.getElementById("match").textContent=scores[0].percent+"%";
+ document.getElementById("winner").textContent=scores[0].c.name;
+ document.getElementById("winnerParty").textContent=scores[0].c.party;
+ document.getElementById("ranking").innerHTML=scores.slice(0,6).map((x,i)=>`<div class="row"><div class="rowhead"><span>${i+1}. ${x.c.name}</span><span>${x.percent}%</span></div><div class="track"><div class="fill" style="width:${x.percent}%"></div></div></div>`).join("");
+}
+function restart(){index=0;answers=[];document.getElementById("result").classList.add("hidden");document.getElementById("quiz").classList.remove("hidden");render()}
+</script>
+</body>
+</html>
