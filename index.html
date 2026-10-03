@@ -21,7 +21,9 @@ h2{font-size:26px;line-height:1.15;margin:0 0 10px;letter-spacing:-.6px}.desc{co
 .label{font-weight:650;line-height:1.4}.small{font-size:12px;color:var(--muted);margin-top:4px}
 .nav{display:flex;gap:10px;margin-top:22px}.back{background:#eef0f4;color:#111827}.nav .btn{flex:1}
 .result{text-align:center}.match{font-size:54px;font-weight:850;letter-spacing:-3px;margin:5px 0}.candidate{font-size:27px;font-weight:800}.party{color:var(--muted);margin-top:3px}
-.bars{text-align:left;margin:28px 0}.row{margin:15px 0}.rowhead{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:7px}.track{height:9px;background:#eceef2;border-radius:99px;overflow:hidden}.fill{height:100%;background:#111827;border-radius:99px}
+.bars{text-align:left;margin:28px 0}.row{margin:15px 0}.rowhead{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px;font-weight:700;margin-bottom:7px}.rowhead .name{display:flex;align-items:center;gap:8px;min-width:0;flex:1}.rowhead .name span:last-child{overflow:hidden;text-overflow:ellipsis}.track{height:9px;background:#eceef2;border-radius:99px;overflow:hidden}.fill{height:100%;background:#111827;border-radius:99px}
+.info{flex:none;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:#fff;color:#111827;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}.info:hover,.info[aria-expanded="true"]{background:#111827;color:#fff;border-color:#111827}.info svg{width:14px;height:14px;display:block}
+.proposals{display:none;margin-top:10px;padding:12px 14px;background:#f3f4f6;border-radius:12px;text-align:left}.proposals.open{display:block}.proposals ul{margin:0;padding-left:18px}.proposals li{font-size:12px;color:#374151;line-height:1.45;margin:6px 0}.psource{font-size:10px;color:#9ca3af;margin-top:4px}.proposals .ptheme{font-weight:800;color:#6b7280;font-size:10px;text-transform:uppercase;letter-spacing:.8px;margin-right:6px}
 .note{background:#f3f4f6;border-radius:14px;padding:14px;text-align:left;color:#555e6d;font-size:12px;line-height:1.55}
 .sources{font-size:11px;color:#7a8190;margin-top:20px;line-height:1.5}
 .hidden{display:none}@media(max-width:520px){.card{padding:22px;border-radius:20px}.wrap{padding:18px 12px}.top{margin-bottom:20px}}
@@ -37,7 +39,7 @@ h2{font-size:26px;line-height:1.15;margin:0 0 10px;letter-spacing:-.6px}.desc{co
     <h1>Quais propostas mais se aproximam das suas?</h1>
     <p class="desc">Responda às perguntas abaixo e veja como suas escolhas se relacionam com diferentes posições presentes nos programas de governo.</p>
     <button class="btn" onclick="start()">Começar</button>
-    <div class="sources">Protótipo demonstrativo. A versão final deve usar exclusivamente posições verificadas nos planos oficiais do TSE.</div>
+    <div class="sources">Trechos exibidos no resultado foram extraídos dos planos de governo oficiais protocolados no TSE (Dados Abertos — Eleições 2026). A correspondência do quiz ainda usa tags demonstrativas.</div>
   </section>
 
   <section id="quiz" class="card hidden">
@@ -55,7 +57,7 @@ h2{font-size:26px;line-height:1.15;margin:0 0 10px;letter-spacing:-.6px}.desc{co
     <div class="bars" id="ranking"></div>
     <div class="note"><b>Como interpretar:</b> este percentual representa apenas a correspondência matemática entre as respostas e a base de posições configurada no protótipo. Não é recomendação de voto, previsão eleitoral ou avaliação de candidato.</div>
     <button class="btn" style="margin-top:18px" onclick="restart()">Refazer questionário</button>
-    <div class="sources">Base visual e estrutura preparadas para receber os dados dos planos de governo oficiais publicados pelo TSE.</div>
+    <div class="sources">Fonte dos trechos: TSE — pacote Proposta de governo BR 2026 (Dados Abertos). Consulte o documento integral no DivulgaCandContas.</div>
   </section>
 </main></div>
 
@@ -78,7 +80,7 @@ const candidates = [
  {name:"Edmilson Costa", party:"PCB", tags:["trabalhador","estatizacao","publico","reforma_tributaria","divida"]},
  {name:"Rui Costa Pimenta", party:"PCO", tags:["trabalhador","estatizacao","salario","divida","tributacao"]},
  {name:"Samara Martins", party:"UP", tags:["trabalhador","estatizacao","emprego_publico","industria","divida"]},
- {name:"Leonardo Avalanche", party:"PRTB", tags:["mercado","seguranca","empreendedor"]}
+ {name:"Leonardo Avalanche", party:"PRTB", tags:["mercado","seguranca","empreendedor","impostos","desburocratizacao"]}
 ];
 
 const questions = [
@@ -131,47 +133,1029 @@ const questions = [
   ["Mais investimento privado e ambiente favorável aos negócios",["mercado","empreendedor"]],
   ["Parceria entre Estado e iniciativa privada",["infra","empreendedor","estado"]],
   ["Política industrial e investimento público",["industria","investimento","estado"]],
-  ["Controle estatal de setores estratégicos e reindustrialização",["estatizacao","industria"]]]}
+  ["Controle estatal de setores estratégicos e reindustrialização",["estatizacao","industria"]]]},
+ {theme:"Educação",q:"Qual deve ser a prioridade na educação?",opts:[
+  ["Ampliar escolas técnicas e formação para o mercado",["empreendedor","educacao","produtividade"]],
+  ["Investir em educação pública de qualidade em todas as etapas",["educacao","publico","investimento"]],
+  ["Priorizar educação como política de redução de desigualdades",["educacao","social","estado"]],
+  ["Expandir a educação pública com forte presença do Estado",["educacao","estatizacao","publico"]]]},
+ {theme:"Saúde mental",q:"Como o governo deveria tratar a saúde mental?",opts:[
+  ["Incentivar prevenção, produtividade e bem-estar no trabalho",["saude_mental","empreendedor","produtividade"]],
+  ["Integrar saúde mental ao SUS e ampliar atendimento",["saude_mental","sistema_publico","digital"]],
+  ["Aumentar investimento público em saúde mental",["saude_mental","publico","investimento"]],
+  ["Tratar saúde mental como política estatal prioritária",["saude_mental","estatizacao","publico"]]]},
+ {theme:"Família",q:"Qual abordagem você considera mais adequada para políticas voltadas à família?",opts:[
+  ["Fortalecer a família com segurança e estabilidade econômica",["familia","seguranca","empreendedor"]],
+  ["Apoiar famílias com serviços públicos e assistência",["familia","social","estado"]],
+  ["Ampliar creches, licenças e proteção social familiar",["familia","social","publico"]],
+  ["Priorizar políticas familiares com forte papel do Estado",["familia","estado","estatizacao"]]]},
+ {theme:"Pequenos negócios",q:"Como o governo deveria apoiar pequenos negócios e empreendedores?",opts:[
+  ["Desonerar e simplificar tributos para micro e pequenas empresas",["pequenos","desoneracao","simplificacao"]],
+  ["Facilitar crédito, digitalização e abertura de empresas",["pequenos","digital","empreendedor"]],
+  ["Combinar apoio a pequenos negócios com responsabilidade fiscal",["pequenos","ajuste","empreendedor"]],
+  ["Fortalecer cooperativas e empreendimentos populares com apoio estatal",["pequenos","trabalhador","estado"]]]},
+ {theme:"Transição energética",q:"Qual caminho você considera mais adequado para a transição energética?",opts:[
+  ["Acelerar energia limpa com investimento privado e inovação",["transicao","mercado","empreendedor"]],
+  ["Combinar transição energética com infraestrutura e produtividade",["transicao","infra","produtividade"]],
+  ["Liderar a transição com investimento público e política industrial",["transicao","investimento","industria"]],
+  ["Colocar o Estado no centro da transição e da reindustrialização verde",["transicao","estatizacao","estado"]]]}
 ];
 
-let index=0, answers=[];
-function start(){document.getElementById("intro").classList.add("hidden");document.getElementById("quiz").classList.remove("hidden");render();}
+const OFFICIAL_PROPOSALS = {
+  "Luiz Inácio Lula da Silva": [
+    {
+      "theme": "Economia",
+      "text": "Vamos assegurar que a política econômica siga promovendo o crescimento e que ele continue se traduzindo em melhoria real das condições de vida da população. Para isso, vamos elevar a taxa de investimento da economia.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Luiz Inácio Lula da Silva"
+    },
+    {
+      "theme": "Impostos",
+      "text": "Aprovamos a histórica reforma tributária do consumo. O número de impostos cairá de cinco (PIS, Cofins, IPI, ICMS e ISS) para dois (CBS federal e IBS subnacional). A cesta básica ficará isenta e os mais pobres terão direito a cashback.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Luiz Inácio Lula da Silva"
+    },
+    {
+      "theme": "Trabalho",
+      "text": "A política de valorização real do salário-mínimo e o mercado de trabalho aquecido levaram a uma expansão da massa salarial e do consumo. Alcançamos a maior renda real do trabalho e o menor desemprego da série histórica.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Luiz Inácio Lula da Silva"
+    },
+    {
+      "theme": "Empresas",
+      "text": "O Novo PAC articulou recursos do orçamento federal, das empresas estatais, do setor privado e de financiamentos, com volume histórico de investimentos previstos até o final de 2026.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Luiz Inácio Lula da Silva"
+    },
+    {
+      "theme": "Programas sociais",
+      "text": "O Bolsa Família foi recriado e expandido com benefícios especiais para crianças e adolescentes. A desigualdade, medida pelo coeficiente de Gini, atingiu o menor patamar histórico.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Luiz Inácio Lula da Silva"
+    },
+    {
+      "theme": "Saúde",
+      "text": "Restabelecemos os pisos constitucionais da saúde e da educação e reorganizamos as contas públicas, controlando o crescimento das despesas sem prejudicar a recomposição de gastos sociais.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Luiz Inácio Lula da Silva"
+    },
+    {
+      "theme": "Segurança",
+      "text": "Uma vez aprovada a PEC da Segurança Pública, criaremos o Ministério da Segurança Pública para coordenar, com estados e municípios, as políticas nacionais no âmbito do Sistema Único de Segurança Pública (SUSP).",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Luiz Inácio Lula da Silva"
+    },
+    {
+      "theme": "Dívida pública",
+      "text": "Adotamos uma estratégia fiscal inovadora com o novo arcabouço fiscal, que controlou o crescimento das despesas sem prejudicar a recomposição de gastos sociais.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Luiz Inácio Lula da Silva"
+    },
+    {
+      "theme": "Tecnologia",
+      "text": "O Portal da Transparência receberá investimentos para evoluir para uma plataforma inteligente baseada em dados abertos e inteligência artificial.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Luiz Inácio Lula da Silva"
+    },
+    {
+      "theme": "Desenvolvimento",
+      "text": "O Novo PAC levou à mobilização de um volume histórico de investimentos, previstos em R$ 1,3 trilhão até o final de 2026, em rodovias, ferrovias, portos, energia, habitação, saneamento, saúde e educação.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Luiz Inácio Lula da Silva"
+    },
+    {
+      "theme": "Educação",
+      "text": "Aprimoraremos o Programa Pé-de-Meia, para continuar apoiando a juventude em seu processo educacional.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Luiz Inácio Lula da Silva"
+    },
+    {
+      "theme": "Saúde mental",
+      "text": "Aprimorar a política de saúde mental para a juventude é um de nossos compromissos, com foco na Política Nacional de Atenção Psicossocial, na redução de danos e na desconstrução de preconceitos nas comunidades escolares e universitárias.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Luiz Inácio Lula da Silva"
+    },
+    {
+      "theme": "Família",
+      "text": "Continuaremos ampliando e fortalecendo as políticas para crianças, com investimentos na construção de creches e pré-escolas por meio do Novo PAC e expansão da educação em tempo integral.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Luiz Inácio Lula da Silva"
+    },
+    {
+      "theme": "Pequenos negócios",
+      "text": "O Brasil é um país de pequenos negócios. Dada a relevância deste segmento para o desenvolvimento do país, é preciso aprofundar o seu fortalecimento nas políticas e no planejamento governamental.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Luiz Inácio Lula da Silva"
+    },
+    {
+      "theme": "Transição energética",
+      "text": "Para ocupar posição de liderança em áreas estratégicas como inteligência artificial, biotecnologia e transição energética, vamos fomentar o ecossistema nacional de tecnologia digital e a inteligência artificial desenvolvida por empresas brasileiras.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Luiz Inácio Lula da Silva"
+    }
+  ],
+  "Flávio Bolsonaro": [
+    {
+      "theme": "Economia",
+      "text": "Vamos executar um plano nacional de integração às cadeias globais de valor, com apoio ao setor produtivo para ganhar produtividade, tendo como prioridade a agroindústria avançada, os minerais críticos, a saúde e a economia digital.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Flávio Bolsonaro"
+    },
+    {
+      "theme": "Impostos",
+      "text": "Vamos fazer nossos gastos caberem no orçamento, o que permitirá cobrar menos impostos e não empurrará dívida para as próximas gerações.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Flávio Bolsonaro"
+    },
+    {
+      "theme": "Trabalho",
+      "text": "Vamos criar um sistema que integre vagas de emprego, qualificação, abertura simplificada de empresa, apoio ao pequeno negócio e intermediação de mão de obra.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Flávio Bolsonaro"
+    },
+    {
+      "theme": "Empresas",
+      "text": "Vamos retomar o Programa Nacional de Desestatização com critério e blindar os fundos de pensão das estatais da indicação política.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Flávio Bolsonaro"
+    },
+    {
+      "theme": "Programas sociais",
+      "text": "Criamos o Auxílio Brasil, que triplicou o valor pago às famílias. O objetivo de um bom governo não é ter mais gente na fila do auxílio: é ter cada vez mais brasileiros que conquistaram a própria autonomia.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Flávio Bolsonaro"
+    },
+    {
+      "theme": "Saúde",
+      "text": "Vamos completar a digitalização do SUS e usar inteligência artificial para agilizar o agendamento de consultas e exames, encaixando o paciente na primeira vaga disponível.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Flávio Bolsonaro"
+    },
+    {
+      "theme": "Segurança",
+      "text": "Vamos declarar guerra ao crime organizado. PCC, CV, milícias e outras facções serão declaradas organizações narcoterroristas e combatidas com força, inteligência e integração.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Flávio Bolsonaro"
+    },
+    {
+      "theme": "Dívida pública",
+      "text": "Faremos nossos gastos caberem no orçamento, o que permitirá cobrar menos impostos e não empurrará dívida para as próximas gerações.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Flávio Bolsonaro"
+    },
+    {
+      "theme": "Tecnologia",
+      "text": "Vamos digitalizar 100% dos serviços públicos do Governo Federal passíveis de digitalização, sob o princípio do digital by design, e eliminar a exigência de reapresentar documentos que o Estado já possui.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Flávio Bolsonaro"
+    },
+    {
+      "theme": "Desenvolvimento",
+      "text": "Agora vamos concluir esse trabalho com um Tesouraço da Burocracia que corta pela raiz o que faz o cidadão e o empreendedor perderem tempo, destravando investimentos em infraestrutura.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Flávio Bolsonaro"
+    },
+    {
+      "theme": "Educação",
+      "text": "Vamos levar robótica, computadores, tablets e internet às escolas, e incluir no currículo competências para a economia digital, preparando o jovem para empreender e usar novas tecnologias, entre elas a inteligência artificial.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Flávio Bolsonaro"
+    },
+    {
+      "theme": "Saúde mental",
+      "text": "A saúde mental é outra face do cuidado. Vamos fortalecer e ampliar a atenção à saúde mental, com diagnóstico precoce e apoio às crianças com TDAH, atenção à depressão e à ansiedade, e cuidado com idosos que enfrentam Alzheimer e outras doenças neurológicas.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Flávio Bolsonaro"
+    },
+    {
+      "theme": "Família",
+      "text": "Vamos ampliar a oferta de creches para as crianças desde a primeira infância, reconhecendo o impacto do cuidado não remunerado sobre as mulheres e a renda familiar.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Flávio Bolsonaro"
+    },
+    {
+      "theme": "Pequenos negócios",
+      "text": "Vamos criar um sistema que integre vagas de emprego, qualificação, abertura simplificada de empresa e apoio ao pequeno negócio.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Flávio Bolsonaro"
+    },
+    {
+      "theme": "Transição energética",
+      "text": "Na energia elétrica, vamos simplificar a conta de luz, racionalizando encargos e subsídios cruzados, e promover a redução gradual da CDE e das fontes incentivadas, mantida a tarifa social.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Flávio Bolsonaro"
+    }
+  ],
+  "Renan Santos": [
+    {
+      "theme": "Economia",
+      "text": "Nossas reformas são todas pautadas por princípios simples: integração da tecnologia de ponta, redução de entraves para a iniciativa privada e valorização das vantagens competitivas nacionais.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Renan Santos"
+    },
+    {
+      "theme": "Impostos",
+      "text": "liberam espaço fiscal para investimentos e redução de impostos, eliminam a constante ameaça do crime e o medo de andar nas ruas, e reestruturam o sistema de incentivos da nossa política para que os representantes eleitos passem a de fato servir o povo, em vez de aproveitarem-se dele.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Renan Santos"
+    },
+    {
+      "theme": "Trabalho",
+      "text": "substituindo o Bolsa Família por um modelo de frentes de trabalho, em que os beneficiários participam de projetos para o bem público, se consolidando como participantes ativos da comunidade.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Renan Santos"
+    },
+    {
+      "theme": "Empresas",
+      "text": "Suas medidas visam a reduzir impostos sobre empresas de tecnologia, facilitar a distribuição de stock options e maximizar o investimento em venture capital por fundos brasileiros.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Renan Santos"
+    },
+    {
+      "theme": "Programas sociais",
+      "text": "destaque para a reforma do assistencialismo e a substituição do Bolsa Família por frentes de trabalho remuneradas para a população em idade economicamente ativa.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Renan Santos"
+    },
+    {
+      "theme": "Saúde",
+      "text": "Em “SUS Fila Zero” propomos uma agenda de inovação na área da saúde, com integração da inteligência artificial para melhoria e democratização dos serviços.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Renan Santos"
+    },
+    {
+      "theme": "Segurança",
+      "text": "discorremos sobre nossa política de segurança pública, com ênfase na aplicação do Direito Penal do Inimigo como arcabouço legal que permitirá o desmonte do crime organizado e o fim dos crimes de rua.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Renan Santos"
+    },
+    {
+      "theme": "Dívida pública",
+      "text": "O ajuste fiscal necessário é da ordem de R$ 250 bilhões anuais, segundo Mansueto de Almeida. Para realizar esse tipo de mudança, qualquer governo a partir de 2027 precisará desindexar e desvincular despesas e reformar a previdência.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Renan Santos"
+    },
+    {
+      "theme": "Tecnologia",
+      "text": "Nossas reformas são todas pautadas por princípios simples: integração da tecnologia de ponta, redução de entraves para a iniciativa privada e valorização das vantagens competitivas nacionais.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Renan Santos"
+    },
+    {
+      "theme": "Desenvolvimento",
+      "text": "propomos seis diretrizes principais: 1 aumento do investimento estatal em infraestrutura, condicionado à reforma administrativa e fiscal prévia; 2 mobilização do capital privado por concessões, PPPs e o novo regime de autorização ferroviária;",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Renan Santos"
+    },
+    {
+      "theme": "Educação",
+      "text": "No nível universitário, propomos a ampliação das vagas de STEM e a substituição das cotas por um conceito de bolsas por mérito; na educação básica e fundamental, pretendemos universalizar o exemplo exitoso do Ceará e restaurar a ordem nas salas de aula, em um modelo capaz de elevar o Brasil nos rankings internacionais.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Renan Santos"
+    },
+    {
+      "theme": "Família",
+      "text": "O Brasil é um dos poucos países do mundo que ainda convive com a favela como modalidade dominante de moradia popular. O Censo de 2022 do IBGE identificou 12.348 favelas e comunidades urbanas em 656 municípios brasileiros, abrigando 16,4 milhões de pessoas, 8,1% da população do país, distribuídas em 6,56 milhões de domicílios.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Renan Santos"
+    },
+    {
+      "theme": "Pequenos negócios",
+      "text": "Suas medidas visam a reduzir impostos sobre empresas de tecnologia, facilitar a distribuição de stock options e maximizar o investimento em venture capital por fundos brasileiros.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Renan Santos"
+    },
+    {
+      "theme": "Transição energética",
+      "text": "Energia: marco regulatório da transmissão de energia, com desbloqueio do gargalo que hoje impõe curtailment massivo ao Nordeste, retomada decisiva das obras de Angra 3, exploração do hidrogênio verde com abertura para a bacia amazônica, e atenção à fusão nuclear.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Renan Santos"
+    }
+  ],
+  "Ronaldo Caiado": [
+    {
+      "theme": "Economia",
+      "text": "A iniciativa privada será o principal motor da economia; ao Estado caberá garantir estabilidade, concorrência, infraestrutura, capital humano, regulação de qualidade e instrumentos para que inovação e investimento de longo prazo aconteçam.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Ronaldo Caiado"
+    },
+    {
+      "theme": "Impostos",
+      "text": "COMPROMISSO: estabilizar a dívida, reconstruir superávits, proteger o investimento e reduzir o peso dos juros sem transferir a conta aos mais pobres e sem recorrer a aumentos permanentes de carga tributária.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Ronaldo Caiado"
+    },
+    {
+      "theme": "Trabalho",
+      "text": "Modernizar o mercado de trabalho com proteção e oportunidade Promover formação contínua, intermediação digital, apoio à transição profissional, inclusão de jovens e mulheres, segurança para novas formas de trabalho e redução dos custos que empurram pessoas e empresas à informalidade.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Ronaldo Caiado"
+    },
+    {
+      "theme": "Empresas",
+      "text": "Abrir mercados e integrar o Brasil ao mundo Ampliar acordos comerciais, reduzir barreiras a insumos e tecnologia, fortalecer defesa comercial, atrair investimento produtivo e inserir empresas brasileiras em cadeias globais com maior valor agregado.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Ronaldo Caiado"
+    },
+    {
+      "theme": "Programas sociais",
+      "text": "Preservar os programas de transferência de renda, atualizar cadastros e combater fraude sem constranger beneficiários. Criar regra de transição para quem ingressa no trabalho formal ou amplia renda, reduzindo benefício gradualmente e conectando a qualificação, creche e intermediação.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Ronaldo Caiado"
+    },
+    {
+      "theme": "Saúde",
+      "text": "A saúde preservará os princípios do SUS, mas mudará sua capacidade de entrega: cuidado preventivo, atendimento perto de casa, prontuário interoperável, fila transparente, especialista no tempo certo e hospitais remunerados por qualidade e resultado.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Ronaldo Caiado"
+    },
+    {
+      "theme": "Segurança",
+      "text": "Segurança pública será responsabilidade direta da Presidência da República. Nenhuma família deve viver sob o medo de perder um filho para o crime, nenhuma mulher deve depender da sorte para ter sua medida protetiva cumprida e nenhuma comunidade pode ser submetida ao domínio de facções e milícias.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Ronaldo Caiado"
+    },
+    {
+      "theme": "Dívida pública",
+      "text": "O ajuste não será baseado em aumentos sucessivos de impostos nem em cortes lineares. O foco será impedir que as despesas obrigatórias cresçam acima da capacidade da economia, eliminar privilégios, rever gastos e benefícios sem resultado e reconstruir a confiança na trajetória da dívida.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Ronaldo Caiado"
+    },
+    {
+      "theme": "Tecnologia",
+      "text": "Criar centro de governo digital com autoridade para coordenar reguladores e ministérios, delimitar competências e exigir consulta entre órgãos antes de novas normas.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Ronaldo Caiado"
+    },
+    {
+      "theme": "Desenvolvimento",
+      "text": "Manter um calendário permanente e previsível de leilões (dando continuidade ao Programa de Parcerias em Investimentos, o PPI) em rodovias, ferrovias, portos, aeroportos, saneamento, energia e infraestrutura social, como hospitais, escolas e iluminação pública.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Ronaldo Caiado"
+    },
+    {
+      "theme": "Educação",
+      "text": "O governo federal liderará uma aliança com estados, municípios, professores, famílias e setor produtivo para garantir alfabetização, recomposição, escola atraente e formação conectada ao trabalho e à cidadania.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Ronaldo Caiado"
+    },
+    {
+      "theme": "Saúde mental",
+      "text": "A Rede de Atenção Psicossocial (RAPS) deve articular Atenção Primária à Saúde (APS), Centros de Atenção Psicossocial (CAPS), urgência e emergência, atenção especializada, hospitais, psicologia e assistência social, garantindo continuidade do cuidado e evitando que o paciente se perca entre serviços.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Ronaldo Caiado"
+    },
+    {
+      "theme": "Família",
+      "text": "Universalizar pré-escola e ampliar creches prioritariamente para famílias vulneráveis e territórios com baixa oferta, combinando construção, conveniamento regulado e apoio a municípios.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Ronaldo Caiado"
+    },
+    {
+      "theme": "Pequenos negócios",
+      "text": "Fortalecer micro e pequenas empresas Simplificar obrigações, ampliar crédito e garantias, qualificação gerencial, transformação digital, compras públicas e acesso a mercados, reduzindo o custo de formalização e crescimento.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Ronaldo Caiado"
+    },
+    {
+      "theme": "Transição energética",
+      "text": "Consolidar a liderança brasileira no biometano produzido a partir de resíduos do campo e das cidades, no etanol e nos biocombustíveis avançados de segunda geração, no biodiesel, no combustível sustentável de aviação e no hidrogênio de baixa emissão, promovendo desenvolvimento regional, segurança energética e novas oportunidades industriais.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Ronaldo Caiado"
+    }
+  ],
+  "Romeu Zema": [
+    {
+      "theme": "Economia",
+      "text": "Integrar a economia brasileira ao mundo por meio da expansão de acordos comerciais, da diversificação de parcerias e da entrada na OCDE, impulsionando a atração de investimentos e ampliando as oportunidades de exportação para as empresas brasileiras.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Romeu Zema"
+    },
+    {
+      "theme": "Impostos",
+      "text": "Definir metas de redução de impostos que forcem o corte efetivo de gastos: Fixar metas progressivas de redução da carga tributária que imponham os cortes de gastos necessários para atingi-las, invertendo a lógica atual em que o gasto define o imposto.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Romeu Zema"
+    },
+    {
+      "theme": "Trabalho",
+      "text": "Reduzir os custos de contratar para retirar os brasileiros da informalidade: Zerar os encargos sobre o equivalente a um salário mínimo na contratação de quem está há mais de um ano na informalidade, em empresas de todos os setores, estimulando a contratação formal, principalmente em pequenas e médias empresas.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Romeu Zema"
+    },
+    {
+      "theme": "Empresas",
+      "text": "Abrir o setor de petróleo à concorrência: Desverticalizar a Petrobras, separando as operações de produção, refino, transporte e logística em diferentes empresas para permitir a entrada de novos concorrentes e ampliar a concorrência em igualdade de condições.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Romeu Zema"
+    },
+    {
+      "theme": "Programas sociais",
+      "text": "Concentrar recursos de transferências de renda no Bolsa Família: Unificar os programas federais que atendem os mesmos públicos no Bolsa Família, aprimorando a focalização do gasto nas famílias que mais precisam e reduzindo fraudes e custos administrativos desnecessários.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Romeu Zema"
+    },
+    {
+      "theme": "Saúde",
+      "text": "Garantir acompanhamento a pessoas com doenças crônicas: Aprimorar os incentivos por resultados no financiamento da atenção primária a estados e municípios, priorizando a redução efetiva de doenças crônicas, como diabetes, hipertensão e doenças cardiovasculares.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Romeu Zema"
+    },
+    {
+      "theme": "Segurança",
+      "text": "Empregar as Forças Armadas de forma integrada às polícias para retomar territórios dominados pelo crime organizado: Retomar os territórios dominados pelas facções com operações que envolvam colaboração entre as Forças Armadas, as polícias estaduais e a Polícia Federal, garantindo a paz aos brasileiros que vivem nessas regiões.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Romeu Zema"
+    },
+    {
+      "theme": "Dívida pública",
+      "text": "Criar condições para a queda da taxa de juros: Garantir a queda da curva de juros por meio de um choque fiscal para estabilizar a relação dívida/PIB, promovendo reformas e mantendo superávits primários que permitam o pagamento da dívida.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Romeu Zema"
+    },
+    {
+      "theme": "Tecnologia",
+      "text": "Garantir que o Brasil não irá restringir o mercado de IA por meio de regulações excessivas e inadequadas: Atrair investimentos para as cadeias de IA, evitando uma regulação precoce e ampla da inteligência artificial, garantindo segurança jurídica para o setor e regulando pontualmente apenas onde surgirem danos concretos comprovados.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Romeu Zema"
+    },
+    {
+      "theme": "Desenvolvimento",
+      "text": "Revisar os marcos regulatórios da infraestrutura para eliminar restrições, burocracias e exigências que limitam os investimentos nos setores, facilitando a atração de novas empresas e a formulação de novos projetos, permitindo serviços melhores e preços mais baixos, especialmente no setor de transportes e energia.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Romeu Zema"
+    },
+    {
+      "theme": "Educação",
+      "text": "Ampliar a oferta de ensino integral com foco em aprendizagem e desenvolvimento: Ampliar a oferta de ensino integral por meio de financiamento ao EMI e parcerias com organizações privadas, condicionadas a critérios de qualidade e resultados educacionais.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Romeu Zema"
+    },
+    {
+      "theme": "Saúde mental",
+      "text": "Fortalecer a rede de apoio à saúde mental: Criar indicadores para que a saúde mental seja tratada com maior eficiência, capacitando profissionais dos Caps, Cras, Creas e escolas para identificar, acolher e encaminhar casos, com financiamento estável e compartilhado entre União, estados e municípios.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Romeu Zema"
+    },
+    {
+      "theme": "Família",
+      "text": "Ampliar projetos de moradia de interesse social (housing first), especialmente por meio de aluguel social, como ponto de partida para a ressocialização, vinculando essas ações ao acompanhamento individualizado das pessoas em situação de rua e à qualificação para ingresso no mercado de trabalho.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Romeu Zema"
+    },
+    {
+      "theme": "Pequenos negócios",
+      "text": "Reduzir o imposto de renda das empresas para o nível dos países desenvolvidos: Reduzir gradualmente o imposto de renda das empresas para aproximar o Brasil das economias desenvolvidas e permitir que mais recursos fiquem na atividade produtiva impulsinando investimento, expansão e geração de empregos.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Romeu Zema"
+    },
+    {
+      "theme": "Transição energética",
+      "text": "Acabar com o desperdício de energia limpa, aprimorando a regulação para que os custos da energia gerada em excesso e não aproveitada sejam alocados aos próprios geradores, inclusive no mercado regulado, evitando que o consumidor pague pelas ineficiências do sistema e incentivando cada agente a buscar a solução mais eficiente para sua produção.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Romeu Zema"
+    }
+  ],
+  "Augusto Cury": [
+    {
+      "theme": "Economia",
+      "text": "A juventude será estimulada a empreender. Ampliaremos o acesso a crédito, incubadoras de startups, parques tecnológicos e programas de capacitação em inovação digital.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Augusto Cury"
+    },
+    {
+      "theme": "Impostos",
+      "text": "O sistema tributário brasileiro é um dos mais complexos do mundo. Iremos avaliar os impactos da reforma tributária sobre os diferentes setores da economia, com especial atenção às micro e pequenas empresas.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Augusto Cury"
+    },
+    {
+      "theme": "Trabalho",
+      "text": "Criaremos um grande programa nacional de inserção produtiva da juventude, com incentivos fiscais para empresas que contratarem jovens em seu primeiro emprego, estágios ampliados e programas de aprendizagem tecnológica.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Augusto Cury"
+    },
+    {
+      "theme": "Empresas",
+      "text": "Defendemos um Estado moderno, eficiente e transparente, aliado a uma sociedade ativa, participativa e empreendedora.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Augusto Cury"
+    },
+    {
+      "theme": "Programas sociais",
+      "text": "Na nova economia o Bolsa Família será muitíssimo valorizado não como paternalismo do governo, mas como renda geral para impulsionar o empreendedorismo e a renda familiar.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Augusto Cury"
+    },
+    {
+      "theme": "Saúde",
+      "text": "O SUS é uma das maiores conquistas sociais do Brasil. Nossa prioridade será fortalecer sua gestão por meio da digitalização dos prontuários, integração dos sistemas, redução das filas e melhoria da eficiência administrativa.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Augusto Cury"
+    },
+    {
+      "theme": "Segurança",
+      "text": "O enfrentamento ao crime organizado será prioridade de Estado, com integração total entre forças policiais, inteligência financeira e cooperação internacional.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Augusto Cury"
+    },
+    {
+      "theme": "Dívida pública",
+      "text": "Nossa proposta é promover a redução gradual e sustentável da dívida pública, por meio do crescimento econômico, da responsabilidade fiscal, do equilíbrio das contas públicas e da modernização do Estado.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Augusto Cury"
+    },
+    {
+      "theme": "Tecnologia",
+      "text": "O Brasil precisa deixar de ser apenas consumidor de tecnologia e se tornar produtor de inovação. Ampliaremos significativamente os investimentos em ciência, pesquisa e desenvolvimento.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Augusto Cury"
+    },
+    {
+      "theme": "Desenvolvimento",
+      "text": "Ampliaremos as concessões e as parcerias público-privadas, sempre com regras claras, segurança jurídica e rigorosa fiscalização, para acelerar obras e melhorar a qualidade dos serviços.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Augusto Cury"
+    },
+    {
+      "theme": "Educação",
+      "text": "A educação será a principal política de transformação nacional. Investiremos na alfabetização na idade certa, na melhoria da aprendizagem, na valorização dos professores e na redução das desigualdades educacionais.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Augusto Cury"
+    },
+    {
+      "theme": "Saúde mental",
+      "text": "A saúde mental dos jovens será tratada como prioridade nacional. Expandiremos o acesso a atendimento psicológico nas escolas, universidades e unidades de saúde, além de campanhas de prevenção contra depressão e ansiedade.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Augusto Cury"
+    },
+    {
+      "theme": "Família",
+      "text": "Meta: regularizar até 5 milhões de moradias em dez anos, com prioridade às famílias de menor renda e aos territórios com condições jurídicas e urbanísticas para regularização mais rápida.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Augusto Cury"
+    },
+    {
+      "theme": "Pequenos negócios",
+      "text": "Propomos a criação do Banco Mundial do Empreendedor, destinado a financiar pequenos negócios, agricultura, comércio, serviços e inovação.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Augusto Cury"
+    },
+    {
+      "theme": "Transição energética",
+      "text": "Ampliaremos investimentos em energia solar, eólica, biomassa, pequenas centrais hidrelétricas e outras fontes renováveis, transformando o país em referência internacional.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Augusto Cury"
+    }
+  ],
+  "Clariana Barão": [
+    {
+      "theme": "Economia",
+      "text": "2.1 Ambiente de negócios simples e previsível Objetivo. Transformar o eixo em uma agenda executável, com responsabilidades claras, coordenação federativa e acompanhamento público. • Simplificação regulatória • Digitalização e abertura rápida de empresas • Segurança jurídica e avaliação de normas",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Clariana Barão"
+    },
+    {
+      "theme": "Trabalho",
+      "text": "3.5 Ensino médio, técnico e transição para o trabalho Objetivo. Transformar o eixo em uma agenda executável, com responsabilidades claras, coordenação federativa e acompanhamento público. • Expansão de formação técnica conectada às vocações regionais • Orientação de carreira e aprendizagem profissional • Parcerias com setor produtivo e ensino superior",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Clariana Barão"
+    },
+    {
+      "theme": "Pequenos negócios",
+      "text": "2.2 Pequenos negócios e empreendedorismo Objetivo. Transformar o eixo em uma agenda executável, com responsabilidades claras, coordenação federativa e acompanhamento público. • Crédito produtivo e garantias • Capacitação gerencial e digital • Compras públicas acessíveis a pequenos negócios",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Clariana Barão"
+    },
+    {
+      "theme": "Desenvolvimento",
+      "text": "2.3 Infraestrutura e logística Objetivo. Transformar o eixo em uma agenda executável, com responsabilidades claras, coordenação federativa e acompanhamento público. • Rodovias e manutenção baseada em desempenho • Ferrovias, hidrovias, portos e cabotagem • Concessões, PPPs e planejamento de longo prazo",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Clariana Barão"
+    },
+    {
+      "theme": "Dívida pública",
+      "text": "Responsabilidade fiscal com foco em resultado Objetivo. Transformar o eixo em uma agenda executável, com responsabilidades claras, coordenação federativa e acompanhamento público. • Revisão de gastos e subsídios • Planejamento plurianual orientado a metas • Transparência de benefícios e avaliação de impacto",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Clariana Barão"
+    },
+    {
+      "theme": "Educação",
+      "text": "3.2 Alfabetização e aprendizagem essencial Objetivo. Transformar o eixo em uma agenda executável, com responsabilidades claras, coordenação federativa e acompanhamento público. • Alfabetização na idade adequada • Recomposição de aprendizagem • Avaliação frequente com intervenção pedagógica",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Clariana Barão"
+    },
+    {
+      "theme": "Tecnologia",
+      "text": "3.4 Escola para o século XXI Objetivo. Transformar o eixo em uma agenda executável, com responsabilidades claras, coordenação federativa e acompanhamento público. • Tecnologia e inteligência artificial com uso responsável • Pensamento crítico, ciência e resolução de problemas • Educação financeira, cidadania e competências digitais",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Clariana Barão"
+    },
+    {
+      "theme": "Segurança",
+      "text": "4.3 Sufocamento financeiro das facções Objetivo. Transformar o eixo em uma agenda executável, com responsabilidades claras, coordenação federativa e acompanhamento público. • Inteligência financeira e patrimonial • Rastreamento de lavagem de dinheiro • Recuperação de ativos com devido processo",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Clariana Barão"
+    },
+    {
+      "theme": "Saúde",
+      "text": "5.1 Atenção primária resolutiva Objetivo. Transformar o eixo em uma agenda executável, com responsabilidades claras, coordenação federativa e acompanhamento público. • Equipes completas e acesso territorial • Coordenação do cuidado e prontuário interoperável • Metas de acompanhamento de condições crônicas",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Clariana Barão"
+    },
+    {
+      "theme": "Família",
+      "text": "1.2 Primeira infância como prioridade nacional Objetivo. Transformar o eixo em uma agenda executável, com responsabilidades claras, coordenação federativa e acompanhamento público. • Pré-natal e cuidado materno-infantil • Nutrição, vacinação e desenvolvimento infantil • Creches e apoio às famílias vulneráveis",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Clariana Barão"
+    }
+  ],
+  "Wilson Grassi": [
+    {
+      "theme": "Economia",
+      "text": "Substituída a contribuição patronal sobre a folha, contratar com carteira assinada deixa de ser a forma mais cara de organizar trabalho. A aposta é que, caindo o preço do vínculo formal, boa parte da informalidade migra sozinha, sem programa, sem campanha publicitária e sem edital.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Wilson Grassi"
+    },
+    {
+      "theme": "Impostos",
+      "text": "Substituir o conjunto de tributos federais que hoje incide sobre folha, faturamento e produção por um único tributo, cobrado automaticamente sobre a movimentação financeira, incidindo em cada lançamento a débito e a crédito em conta.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Wilson Grassi"
+    },
+    {
+      "theme": "Trabalho",
+      "text": "Substituída a contribuição patronal sobre a folha, contratar com carteira assinada deixa de ser a forma mais cara de organizar trabalho. A aposta é que, caindo o preço do vínculo formal, boa parte da informalidade migra sozinha, sem programa, sem campanha publicitária e sem edital.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Wilson Grassi"
+    },
+    {
+      "theme": "Empresas",
+      "text": "Desburocratizar Reduzir o número de obrigações que o cidadão e a empresa precisam cumprir só para existir legalmente. Menos formulário, menos declaração, menos exigência criada para justificar o cargo de quem a inventou.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Wilson Grassi"
+    },
+    {
+      "theme": "Saúde",
+      "text": "Expandir a cobertura de equipes de saúde da família com meta por município e cofinanciamento federal estável, previsível e fora da barganha política.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Wilson Grassi"
+    },
+    {
+      "theme": "Segurança",
+      "text": "O Brasil gasta muito com segurança e prende muito. O que não consegue é desmontar organização criminosa. Prender o vendedor da esquina enquanto a estrutura que o abastece segue intacta é atividade, e atividade não é resultado.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Wilson Grassi"
+    },
+    {
+      "theme": "Dívida pública",
+      "text": "Criar carreira é despesa obrigatória e continuada, e depende de espaço fiscal e de estimativa de impacto na forma da Lei de Responsabilidade Fiscal.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Wilson Grassi"
+    },
+    {
+      "theme": "Tecnologia",
+      "text": "Integrar o prontuário eletrônico entre os níveis de atenção, de modo que o dado acompanhe o paciente e não o estabelecimento.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Wilson Grassi"
+    },
+    {
+      "theme": "Desenvolvimento",
+      "text": "Sem logística barata, redução de imposto vira desconto que o frete come no caminho. Sem energia previsível, indústria não investe.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Wilson Grassi"
+    },
+    {
+      "theme": "Educação",
+      "text": "Continuidade e endurecimento da política federal de alfabetização na idade certa, que já existe desde 2023 e cujo mérito não vamos fingir que é nosso.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Wilson Grassi"
+    },
+    {
+      "theme": "Família",
+      "text": "Qualquer inquilino brasileiro já fez esta conta de cabeça. Ele paga todo mês um valor que, se fosse parcela de financiamento, a esta altura já teria comprado o imóvel. Paga e não fica com nada.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Wilson Grassi"
+    },
+    {
+      "theme": "Pequenos negócios",
+      "text": "O MEI resolveu a entrada e não resolveu a saída. Quem cresce um pouco encontra um degrau tributário que torna mais racional parar de crescer, ou crescer por fora. Revisar esse enquadramento é o primeiro item.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Wilson Grassi"
+    },
+    {
+      "theme": "Transição energética",
+      "text": "Usar a matriz renovável já existente como fator de atração industrial, sobretudo para setores eletrointensivos que precisam comprovar origem limpa.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Wilson Grassi"
+    }
+  ],
+  "Hertz Dias": [
+    {
+      "theme": "Economia",
+      "text": "Emprego depende de um planejamento econômico que articule produção e consumo, que direcione investimentos para setores capazes de ampliar a base produtiva e que converta ganhos tecnológicos e de produtividade em redução da jornada de trabalho – e, por consequência, em ampliação do número de postos de trabalho.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Hertz Dias"
+    },
+    {
+      "theme": "Impostos",
+      "text": "Imposto progressivo sobre as verdadeiras grandes fortunas, o topo da pirâmide, os que possuem de R$ 1 bilhão para cima. Fim dos benefícios fiscais e tributários às grandes empresas Isenção de ir até dez salários mínimos, atualizando a tabela à 1996, a partir de quando deixou de ser corrigida pela inflação, fazendo cada vez mais pobres pagarem ir.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Hertz Dias"
+    },
+    {
+      "theme": "Trabalho",
+      "text": "Redução da jornada de trabalho para 36 horas, sem redução dos salários e sem flexibilização de direitos, rumo à escala móvel de horas de trabalho (pleno emprego). Trabalhar menos para que todos trabalhem!",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Hertz Dias"
+    },
+    {
+      "theme": "Empresas",
+      "text": "Petrobras 100% estatal e sob controle dos trabalhadores já! Destinação prioritária dos excedentes dessas empresas à criação e expansão de setores de alta complexidade tecnológica, especialmente nos ramos de refino e de separação de alta pureza de terras raras e minerais críticos,",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Hertz Dias"
+    },
+    {
+      "theme": "Programas sociais",
+      "text": "Bolsa equivalente a um salário mínimo para trabalhadores desempregados enquanto não houver pleno emprego. Plano nacional de obras públicas voltado à geração de empregos, universalização do saneamento básico, construção de escolas, hospitais, creches,",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Hertz Dias"
+    },
+    {
+      "theme": "Saúde",
+      "text": "Defesa do sus público, universal, gratuito e 100% estatal Fim da privatização e da gestão privada da saúde (OS, Fundações e PPP) Proibição da transferência de leitos públicos para planos privados Ampliação do investimento público em saúde, com prioridade para a atenção básica",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Hertz Dias"
+    },
+    {
+      "theme": "Segurança",
+      "text": "Desde já, é preciso estimular a população a se auto-organizar para garantir sua própria segurança, seja diante do crime organizado e da criminalidade em geral, seja diante da violência do Estado por suas polícias.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Hertz Dias"
+    },
+    {
+      "theme": "Dívida pública",
+      "text": "Suspensão do pagamento da dívida pública aos grandes investidores e auditoria Fim a Lei de Responsabilidade Fiscal A estatização do sistema financeiro e centralização do crédito em um banco único é essencial para planejar a economia e garantir o controle de capitais.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Hertz Dias"
+    },
+    {
+      "theme": "Tecnologia",
+      "text": "desenvolvimento técnico recente – como a inteligência artificial e suas aplicações em plataformas de comércio, transporte e serviços – deverão ser desenvolvidas sob controle do Estado, com a participação organizada dos trabalhadores que as produzem",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Hertz Dias"
+    },
+    {
+      "theme": "Desenvolvimento",
+      "text": "Plano nacional de obras públicas voltado à geração de empregos, universalização do saneamento básico, construção de escolas, hospitais, creches, infraestrutura ambiental, entre outras obras necessárias e respeitadoras do meio ambiente.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Hertz Dias"
+    },
+    {
+      "theme": "Educação",
+      "text": "Investimento massivo na educação pública. Produção de conhecimento voltada às necessidades sociais, e não ao mercado Por um sistema único de educação para todas as crianças e adolescentes.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Hertz Dias"
+    },
+    {
+      "theme": "Saúde mental",
+      "text": "Cuidado com a saúde mental: ampliação do investimento público nos Centros de Atenção Psicossocial (Caps), no Serviço de Residências Terapêuticas e Centros de Convivência.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Hertz Dias"
+    },
+    {
+      "theme": "Família",
+      "text": "Por reforma agrária e por uma revolução na estrutura do campo brasileiro! Transferir o controle das terras para os trabalhadores rurais, transformando estruturalmente as relações de propriedade, poder e produção no campo, pondo fim à exploração que enriquece bilionários.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Hertz Dias"
+    },
+    {
+      "theme": "Pequenos negócios",
+      "text": "Defendemos aqui as reivindicações atuais dos trabalhadores de aplicativos, surgidas em suas lutas e no tópico seguinte fazemos uma proposta para que possamos realmente garantir transparência nos algoritmos e melhores condições para os trabalhadores de aplicativos.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Hertz Dias"
+    }
+  ],
+  "Edmilson Costa": [
+    {
+      "theme": "Economia",
+      "text": "Criaremos ainda o Banco dos Trabalhadores, que será responsável pela gestão dos fundos previdenciários e de seguridade social dos trabalhadores e das trabalhadoras. A dívida pública será reestruturada e seu passivo será substituído por títulos de longo prazo.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Edmilson Costa"
+    },
+    {
+      "theme": "Impostos",
+      "text": "impostos progressivos, com isenção do imposto de renda para quem ganha até 1 salário-mínimo do Dieese. Será desenvolvida uma nova política industrial, com estímulo à introdução dos ramos constitutivos das fronteiras tecnológicas.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Edmilson Costa"
+    },
+    {
+      "theme": "Trabalho",
+      "text": "jornada de 30 horas semanais sem redução salarial e o fim da escala 6x1; a revogação das contrarreformas que tanto prejuízos trazem à vida do povo trabalhador brasileiro; a reforma agrária popular;",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Edmilson Costa"
+    },
+    {
+      "theme": "Empresas",
+      "text": "As empresas estratégicas privatizadas serão retomadas para o patrimônio público, será investigado todo o processo de privatizações, com a punição dos responsáveis por adoção de medidas ilícitas, através da criação de uma comissão da verdade das privatizações.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Edmilson Costa"
+    },
+    {
+      "theme": "Programas sociais",
+      "text": "adoção de uma lei de responsabilidade social para garantir recursos à implementação de políticas sociais voltadas a atender as reais necessidades da população.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Edmilson Costa"
+    },
+    {
+      "theme": "Saúde",
+      "text": "Ampliação dos investimentos no Complexo Econômico-Industrial da Saúde (CEIS), para garantir um SUS totalmente público, gratuito e de qualidade. Integração do SUS a partir da atenção primária à saúde, evoluindo até os níveis de maior complexidade.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Edmilson Costa"
+    },
+    {
+      "theme": "Segurança",
+      "text": "segurança pública, com unificação das polícias e instituição do ciclo completo junto com a desvinculação das forças de segurança do exército, sob bases curriculares e formativas completamente reestruturadas numa lógica democrática.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Edmilson Costa"
+    },
+    {
+      "theme": "Dívida pública",
+      "text": "A dívida pública será reestruturada e seu passivo será substituído por títulos de longo prazo. Também será criada uma Comissão Especial para investigar a origem da dívida e, durante o período de investigação, serão suspensos os pagamentos dos juros e amortizações da dívida.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Edmilson Costa"
+    },
+    {
+      "theme": "Tecnologia",
+      "text": "contribuindo para o desenvolvimento de ciência e tecnologia públicas e soberanas. Um SUS forte, público, gratuito e de qualidade só será possível com um CEIS planejado, forte e soberano.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Edmilson Costa"
+    },
+    {
+      "theme": "Desenvolvimento",
+      "text": "Adoção de políticas de infraestrutura, de crédito, de apoio técnico, de armazenagem e transporte de produtos para atendimento às necessidades da população.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Edmilson Costa"
+    },
+    {
+      "theme": "Educação",
+      "text": "implantaremos o ensino 100% público e gratuito, das creches à pósgraduação, com a estatização do sistema privado de ensino. Os Institutos Federais e as Escolas Técnicas serão ampliados para o interior do Brasil,",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Edmilson Costa"
+    },
+    {
+      "theme": "Família",
+      "text": "implantaremos o ensino 100% público e gratuito, das creches à pósgraduação, com a estatização do sistema privado de ensino.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Edmilson Costa"
+    },
+    {
+      "theme": "Pequenos negócios",
+      "text": "transferência de títulos da terra em pequenos lotes sem direito de revenda, fomento à organização de cooperativas com apoio de políticas públicas para a produção agroecológica, armazenamento e escoamento de gêneros para alimentação;",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Edmilson Costa"
+    },
+    {
+      "theme": "Transição energética",
+      "text": "Petrobras 100% estatal, com a redução do ritmo da exploração do petróleo e a criação de um fundo, a partir da renda do petróleo, para financiar a pesquisa e a substituição do petróleo com vistas à geração de energia limpa.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Edmilson Costa"
+    }
+  ],
+  "Rui Costa Pimenta": [
+    {
+      "theme": "Economia",
+      "text": "É preciso cancelar a venda do patrimônio do povo brasileiro e reestatizar todas as empresas entregues ao capital estrangeiro por verdadeiros lesa-pátria. E colocar toda a riqueza natural do Brasil e tudo o que foi construído com o suor dos trabalhadores a serviço do próprio povo.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Rui Costa Pimenta"
+    },
+    {
+      "theme": "Impostos",
+      "text": "Fim dos impostos sobre o consumo e os salários. Imposto somente sobre os ganhos dos capitalistas e grandes fortunas.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Rui Costa Pimenta"
+    },
+    {
+      "theme": "Trabalho",
+      "text": "Redução da jornada de trabalho para o máximo de 7 horas por dia, 5 dias por semana (35 horas semanais): trabalhar menos para que todos trabalhem • Proibição das demissões; ocupação e controle dos trabalhadores sobre as empresas que demitam ou ameacem fechar",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Rui Costa Pimenta"
+    },
+    {
+      "theme": "Empresas",
+      "text": "Nacionalização do petróleo, Petrobrás 100% estatal, sob o controle dos trabalhadores, com eleição de todos os seus postos de direção pelos trabalhadores • Nacionalização e estatização, sem indenização, de todas as reservas minerais, refinarias etc. entregues aos tubarões internacionais",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Rui Costa Pimenta"
+    },
+    {
+      "theme": "Programas sociais",
+      "text": "Auxílio emergencial de verdade, Bolsa Família de pelo menos um salário mínimo, enquanto durar a situação de caos atual • Anulação de todas as dívidas dos trabalhadores com o sistema financeiro.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Rui Costa Pimenta"
+    },
+    {
+      "theme": "Saúde",
+      "text": "Mais verbas para a saúde pública. Não pode haver limite nos gastos para salvar a vida do povo • Plano de emergência para construção de hospitais e postos de saúde em todo o País • Volta do programa Mais Médicos e validação imediata de todos os diplomas de médicos brasileiros e estrangeiros residentes no País",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Rui Costa Pimenta"
+    },
+    {
+      "theme": "Segurança",
+      "text": "Dissolução da polícia militar e de todo o aparato repressivo • Direito de autodefesa dos trabalhadores da cidade e do campo • Formar comitês de autodefesa dos trabalhadores da cidade, do campo e das comunidades de índios",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Rui Costa Pimenta"
+    },
+    {
+      "theme": "Dívida pública",
+      "text": "Imediata redução das taxas de juros; • Estatização do sistema financeiro; banco estatal único sob o controle dos trabalhadores • Fim da “independência” do Banco Central • Cancelamento das dívidas externa e interna com os bancos e grandes credores",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Rui Costa Pimenta"
+    },
+    {
+      "theme": "Educação",
+      "text": "Mais verbas para a educação; verbas públicas somente para o ensino público • Revogação de todas as \"reformas\" do regime golpista contra a educação e o ensino público • Fim dos vestibulares. Livre ingresso nas universidades • Piso salarial nacional dos professores de, pelo menos, R$8,5 mil",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Rui Costa Pimenta"
+    },
+    {
+      "theme": "Família",
+      "text": "Expropriação dos imóveis vagos dos especuladores do mercado imobiliário • Proibição de despejos e desocupações • Elaboração de um plano nacional de construção de milhões de moradias populares, para garantir habitação digna para a população e gerar milhões de empregos, sob o controle dos trabalhadores.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Rui Costa Pimenta"
+    }
+  ],
+  "Samara Martins": [
+    {
+      "theme": "Economia",
+      "text": "Nacionalização dos Bancos e Estatização do Sistema Financeiro: Fusão do sistema bancário sob controle do Estado e gestão dos trabalhadores.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Samara Martins"
+    },
+    {
+      "theme": "Trabalho",
+      "text": "Igualdade salarial rígida: Aplicação severa de punição às empresas que pagarem salários inferiores às mulheres no desempenho das mesmas funções exercidas por homens.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Samara Martins"
+    },
+    {
+      "theme": "Empresas",
+      "text": "Igualdade salarial rígida: Aplicação severa de punição às empresas que pagarem salários inferiores às mulheres no desempenho das mesmas funções exercidas por homens.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Samara Martins"
+    },
+    {
+      "theme": "Programas sociais",
+      "text": "Rede pública de cuidados: Universalização do acesso a creches e pré-escolas públicas e em tempo integral, lavanderias comunitárias e restaurantes populares para retirar das costas das mulheres o fardo do trabalho doméstico não pago.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Samara Martins"
+    },
+    {
+      "theme": "Saúde",
+      "text": "Direitos reprodutivos e saúde da mulher: Garantia de atenção integral à saúde sexual e reprodutiva.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Samara Martins"
+    },
+    {
+      "theme": "Segurança",
+      "text": "Enfrentamento sem trégua à violência machista: Fortalecer políticas de prevenção, combate e enfrentamento à violência contra a mulher. Criminalização da misoginia.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Samara Martins"
+    },
+    {
+      "theme": "Tecnologia",
+      "text": "Investir em ciência e tecnologia com vistas a fortalecer a soberania econômica, criando mecanismos de maior participação e controle popular na agenda de pesquisa e nos seus resultados.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Samara Martins"
+    },
+    {
+      "theme": "Desenvolvimento",
+      "text": "Como o déficit habitacional brasileiro, segundo o Ministério das Cidades, é de 6,9 milhões de moradias, em menos de um ano o país poderia garantir moradia decente para todas as famílias brasileiras sem casa e ainda construir centenas de hospitais e universidades.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Samara Martins"
+    },
+    {
+      "theme": "Educação",
+      "text": "Valorização dos profissionais da educação, recomposição salarial, cumprimento integral do acordo com os servidores da última greve, abertura de concursos públicos e fim de toda forma de terceirização na educação.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Samara Martins"
+    },
+    {
+      "theme": "Saúde mental",
+      "text": "Expansão das Delegacias da Mulher com funcionamento 24 horas, fortalecimento de casas-abrigo e casas de referência, suporte jurídico e psicológico e autonomia econômica para mulheres em situação de violência doméstica e familiar.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Samara Martins"
+    },
+    {
+      "theme": "Família",
+      "text": "Rede pública de cuidados: Universalização do acesso a creches e pré-escolas públicas e em tempo integral, lavanderias comunitárias e restaurantes populares para retirar das costas das mulheres o fardo do trabalho doméstico não pago.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Samara Martins"
+    }
+  ],
+  "Leonardo Avalanche": [
+    {
+      "theme": "Economia",
+      "text": "Nosso governo vai garantir estabilidade nas regras econômicas e contratuais, respeito à propriedade privada e previsibilidade tributária de verdade — não só no papel.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Leonardo Avalanche"
+    },
+    {
+      "theme": "Impostos",
+      "text": "Nossa proposta é reduzir toda essa avalanche de impostos que pesa sobre o brasileiro pra uma alíquota única de 3,5%. Nada de ICMS, ISS, PIS, Cofins, IPI, INSS, Imposto de Renda separados — um imposto só, pra tudo.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Leonardo Avalanche"
+    },
+    {
+      "theme": "Trabalho",
+      "text": "Nosso governo vai criar, por lei, o programa Meu Primeiro Emprego: jovem de 18 a 29 anos, contratado com carteira assinada e salário integral desde o primeiro dia, em cargo com remuneração de até R$ 5.000.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Leonardo Avalanche"
+    },
+    {
+      "theme": "Empresas",
+      "text": "Nosso governo vai incentivar a fabricação nacional dessas peças de maior valor, gerando mais emprego qualificado dentro do país e reduzindo a dependência de fornecedor estrangeiro.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Leonardo Avalanche"
+    },
+    {
+      "theme": "Programas sociais",
+      "text": "pra quem está no Bolsa Família, essa é a solução perfeita pra finalmente ter uma renda extra. Hoje, muita gente tem medo de perder o benefício assim que assina carteira ou consegue um trabalho, e por isso acaba nem tentando.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Leonardo Avalanche"
+    },
+    {
+      "theme": "Saúde",
+      "text": "nosso governo vai ter como meta prioritária zerar a fila do SUS. Na prática: mutirões nacionais de atendimento, parceria com hospitais privados ociosos para absorver demanda reprimida, telemedicina para triagem rápida e gestão por resultado nas secretarias de saúde.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Leonardo Avalanche"
+    },
+    {
+      "theme": "Segurança",
+      "text": "Vamos somar as duas coisas: tecnologia de ponta unida a mais concursos públicos pra polícia, salário digno e reconhecimento de verdade pra quem arrisca a vida todos os dias enfrentando o crime na rua.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Leonardo Avalanche"
+    },
+    {
+      "theme": "Tecnologia",
+      "text": "vamos instalar um sistema de inteligência artificial que monitora em tempo real o estoque de medicamentos em hospitais, postos de saúde e UBS de todo o país, avisando com antecedência quando um remédio está acabando — antes que falte na mão do paciente.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Leonardo Avalanche"
+    },
+    {
+      "theme": "Desenvolvimento",
+      "text": "Nosso governo vai acelerar a implementação dessa legislação já existente, com meta de ampliação da malha ferroviária operada pelo setor privado.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Leonardo Avalanche"
+    },
+    {
+      "theme": "Educação",
+      "text": "transformar a própria educação brasileira num polo tecnológico de ponta. Não é só usar tecnologia como ferramenta pontual — é investir tecnologia de verdade dentro da sala de aula, da creche ao ensino médio, formando a geração mais preparada tecnologicamente que o Brasil já teve.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Leonardo Avalanche"
+    },
+    {
+      "theme": "Saúde mental",
+      "text": "nosso governo vai investir em rede de encontro entre mulheres, espaço de convivência e apoio mútuo, reconhecendo que parte da cura emocional acontece em comunidade, não só no consultório.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Leonardo Avalanche"
+    },
+    {
+      "theme": "Família",
+      "text": "Nosso governo vai estudar se o valor de hoje é suficiente, considerando que os primeiros anos de vida da criança costumam pesar mais no bolso da família — fralda, terapia, acompanhamento médico frequente.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Leonardo Avalanche"
+    },
+    {
+      "theme": "Pequenos negócios",
+      "text": "Quando o imposto é simples e baixo, ninguém tem motivo pra sonegar — não sobra mais brecha estrutural pra escapar dele. A economia gira mais rápido, o consumo aumenta, mais gente formaliza negócio, e tudo isso gera mais arrecadação com menos peso sobre quem trabalha.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Leonardo Avalanche"
+    },
+    {
+      "theme": "Transição energética",
+      "text": "Nosso governo vai criar uma lei que vale igual em todo o país, com redução significativa de imposto federal sobre carro elétrico e híbrido, incentivando a transição energética sem deixar o benefício depender de em qual estado o carro está emplacado.",
+      "source": "TSE — Proposta de governo 2026 (Dados Abertos) · Leonardo Avalanche"
+    }
+  ]
+};
+
+let index=0, answers=[], order=[];
+function shuffle(arr){
+ for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+ return arr;
+}
+function ensureOrder(qi){
+ if(!order[qi]) order[qi]=shuffle(questions[qi].opts.map((_,i)=>i));
+ return order[qi];
+}
+function start(){index=0;answers=[];order=[];document.getElementById("intro").classList.add("hidden");document.getElementById("quiz").classList.remove("hidden");render();}
 function render(){
  const q=questions[index], count=document.getElementById("count");
  count.textContent=`${index+1} de ${questions.length}`;
- document.getElementById("bar").style.width=((index)/questions.length*100)+"%";
+ document.getElementById("bar").style.width=((index+1)/questions.length*100)+"%";
  document.getElementById("theme").textContent=q.theme;
  document.getElementById("question").textContent=q.q;
  const box=document.getElementById("options");box.innerHTML="";
- q.opts.forEach((o,i)=>{
-  const b=document.createElement("button");b.className="option"+(answers[index]===i?" selected":"");
-  b.innerHTML=`<span class="dot"></span><span class="label">${o[0]}</span>`;
+ ensureOrder(index).forEach(i=>{
+  const o=q.opts[i];
+  const b=document.createElement("button");b.type="button";b.className="option"+(answers[index]===i?" selected":"");
+  b.setAttribute("aria-pressed", answers[index]===i?"true":"false");
+  const label=document.createElement("span");label.className="label";label.textContent=o[0];
+  b.innerHTML=`<span class="dot"></span>`;
+  b.appendChild(label);
   b.onclick=()=>{answers[index]=i;render()};
   box.appendChild(b);
  });
+ const backBtn=document.querySelector(".nav .back");
+ backBtn.textContent=index===0?"Início":"Voltar";
  document.getElementById("next").disabled=answers[index]===undefined;
  document.getElementById("next").textContent=index===questions.length-1?"Ver resultado":"Continuar";
 }
 function next(){if(answers[index]===undefined)return;if(index<questions.length-1){index++;render()}else showResult()}
-function prev(){if(index>0){index--;render()}}
+function prev(){
+ if(index>0){index--;render();return;}
+ document.getElementById("quiz").classList.add("hidden");
+ document.getElementById("intro").classList.remove("hidden");
+ document.getElementById("count").textContent="";
+ document.getElementById("bar").style.width="0%";
+}
+function proposalsFor(c){
+ const official=OFFICIAL_PROPOSALS[c.name]||[];
+ if(official.length) return official;
+ return questions.map(q=>{
+  let best=null,bestScore=-1;
+  q.opts.forEach(o=>{
+   const tags=o[1];
+   const hits=tags.filter(t=>c.tags.includes(t)).length;
+   const frac=tags.length?hits/tags.length:0;
+   if(frac>bestScore){bestScore=frac;best=o[0];}
+  });
+  if(bestScore<=0)return null;
+  return {theme:q.theme,text:best,source:"Posição estimada pelo protótipo (sem trecho oficial encontrado)"};
+ }).filter(Boolean);
+}
+function infoIcon(){
+ return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>`;
+}
+function toggleProposals(btn){
+ const panel=btn.closest(".row").querySelector(".proposals");
+ const open=panel.classList.toggle("open");
+ btn.setAttribute("aria-expanded", open?"true":"false");
+}
 function showResult(){
  const scores=candidates.map(c=>({c,score:0}));
  questions.forEach((q,qi)=>{
   const a=answers[qi];if(a===undefined)return;
   const tags=q.opts[a][1];
-  scores.forEach(x=>tags.forEach(t=>{if(x.c.tags.includes(t))x.score++}));
+  if(!tags.length)return;
+  scores.forEach(x=>{
+   const hits=tags.filter(t=>x.c.tags.includes(t)).length;
+   x.score+=hits/tags.length;
+  });
  });
- const max=questions.length*4;
- scores.forEach(x=>x.percent=Math.round((x.score/max)*100));
- scores.sort((a,b)=>b.percent-a.percent);
+ scores.forEach(x=>x.percent=Math.round((x.score/questions.length)*100));
+ scores.sort((a,b)=>b.percent-a.percent || a.c.name.localeCompare(b.c.name,"pt-BR"));
  document.getElementById("quiz").classList.add("hidden");document.getElementById("result").classList.remove("hidden");
  document.getElementById("bar").style.width="100%";document.getElementById("count").textContent="Concluído";
- document.getElementById("match").textContent=scores[0].percent+"%";
- document.getElementById("winner").textContent=scores[0].c.name;
- document.getElementById("winnerParty").textContent=scores[0].c.party;
- document.getElementById("ranking").innerHTML=scores.slice(0,6).map((x,i)=>`<div class="row"><div class="rowhead"><span>${i+1}. ${x.c.name}</span><span>${x.percent}%</span></div><div class="track"><div class="fill" style="width:${x.percent}%"></div></div></div>`).join("");
+ const top=scores[0];
+ const tied=scores.filter(x=>x.percent===top.percent);
+ document.getElementById("match").textContent=top.percent+"%";
+ document.getElementById("winner").textContent=tied.length>1?tied.map(x=>x.c.name).join(" · "):top.c.name;
+ document.getElementById("winnerParty").textContent=tied.length>1?"Empate no topo":top.c.party;
+ document.getElementById("ranking").innerHTML=scores.slice(0,6).map((x,i)=>{
+  const props=proposalsFor(x.c);
+  const list=props.map(p=>`<li><span class="ptheme">${p.theme}</span>${p.text}${p.source?`<div class="psource">${p.source}</div>`:""}</li>`).join("");
+  return `<div class="row"><div class="rowhead"><div class="name"><button type="button" class="info" aria-label="Ver propostas de ${x.c.name}" aria-expanded="false" onclick="toggleProposals(this)">${infoIcon()}</button><span>${i+1}. ${x.c.name}</span></div><span>${x.percent}%</span></div><div class="track"><div class="fill" style="width:${x.percent}%"></div></div><div class="proposals"><ul>${list}</ul></div></div>`;
+ }).join("");
 }
-function restart(){index=0;answers=[];document.getElementById("result").classList.add("hidden");document.getElementById("quiz").classList.remove("hidden");render()}
+function restart(){index=0;answers=[];order=[];document.getElementById("result").classList.add("hidden");document.getElementById("quiz").classList.remove("hidden");render()}
+
 </script>
 </body>
 </html>
